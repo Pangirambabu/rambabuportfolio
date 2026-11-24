@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Find village information, public services, schemes and updates for agency and tribal areas through Agency Connect.">
+  <title>Agency Connect | Agency Area Information Portal</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --forest: #173f35;
+      --green: #267052;
+      --leaf: #dcebdc;
+      --cream: #fbf8ef;
+      --ink: #22332d;
+      --muted: #64736c;
+      --white: #fff;
+      --shadow: 0 14px 36px rgb(23 63 53 / 9%);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--cream);
+      color: var(--ink);
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.65;
+    }
+    img { display: block; max-width: 100%; }
+    a { color: var(--green); }
+    a:focus-visible, button:focus-visible, input:focus-visible {
+      outline: 3px solid #e3a834;
+      outline-offset: 3px;
+    }
+    header, footer { background: var(--white); }
+    body > header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+      padding: 1rem max(5vw, calc((100vw - 1200px) / 2));
+      border-bottom: 1px solid #e8eee7;
+    }
+    body > header > div > a {
+      display: inline-flex;
+      align-items: center;
+      gap: .55rem;
+      color: var(--forest);
+      font-size: 1.25rem;
+      font-weight: 800;
+      text-decoration: none;
+    }
+    body > header > div > a i { color: var(--green); }
+    body > header > div > p { margin: 0; color: var(--muted); font-size: .82rem; }
+    nav ul { display: flex; flex-wrap: wrap; gap: 1.35rem; margin: 0; padding: 0; list-style: none; }
+    nav a { color: var(--ink); font-size: .92rem; font-weight: 650; text-decoration: none; }
+    nav a:hover { color: var(--green); }
+    main > section { padding: 5rem max(5vw, calc((100vw - 1200px) / 2)); }
+    #home {
+      position: relative;
+      display: grid;
+      min-height: 560px;
+      align-items: center;
+      overflow: hidden;
+      background: var(--forest);
+      color: var(--white);
+    }
+    #home > img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: .48;
+    }
+    #home > div { position: relative; max-width: 720px; padding: 2rem 0; }
+    #home p[lang="te"] { color: #e3d9a9; font-weight: 700; }
+    #home h1 { max-width: 680px; margin: .2rem 0; font-size: clamp(2.6rem, 6vw, 5rem); line-height: 1.08; }
+    #home h1 + p { margin-top: .5rem; font-size: 1.2rem; }
+    #home form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .65rem;
+      max-width: 620px;
+      margin-top: 2rem;
+      padding: .55rem;
+      border-radius: 14px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+    #home form label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); }
+    #home input { flex: 1 1 220px; min-width: 0; padding: .8rem 1rem; border: 0; border-radius: 9px; font: inherit; }
+    button {
+      padding: .8rem 1.25rem;
+      border: 0;
+      border-radius: 9px;
+      background: var(--green);
+      color: var(--white);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    button:hover { background: var(--forest); }
+    main > section > header { margin-bottom: 2rem; background: transparent; }
+    main > section > header h2, main > section > h2 { margin: 0; color: var(--forest); font-size: clamp(1.8rem, 4vw, 2.6rem); line-height: 1.2; }
+    main > section > header p { margin: .4rem 0 0; color: var(--muted); }
+    #services > div, #news { display: grid; }
+    #services > div { grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 1rem; }
+    #services article, #news article {
+      padding: 1.5rem;
+      border: 1px solid #e7eee5;
+      border-radius: 16px;
+      background: var(--white);
+      box-shadow: 0 8px 24px rgb(23 63 53 / 5%);
+    }
+    #services article > i { color: var(--green); font-size: 1.5rem; }
+    #services article h3, #news article h3 { margin: .8rem 0 .3rem; color: var(--forest); }
+    #services article p, #news article p { color: var(--muted); }
+    #services article a, #news article a { font-weight: 700; text-decoration: none; }
+    #pathakota-villages { background: #f0f5ed; }
+    #pathakota-villages > div { overflow-x: auto; border-radius: 14px; background: var(--white); box-shadow: var(--shadow); }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    caption { padding: 1rem; color: var(--muted); text-align: left; }
+    th, td { padding: .85rem 1rem; border-bottom: 1px solid #e7eee5; }
+    thead { background: var(--forest); color: var(--white); }
+    tbody th { color: var(--green); }
+    tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
+    #news { grid-template-columns: repeat(auto-fit, minmax(min(100%, 270px), 1fr)); gap: 1rem; }
+    #news > header { grid-column: 1 / -1; margin-bottom: .25rem; }
+    #news article { padding: 0 0 1.5rem; overflow: hidden; }
+    #news article > :not(img) { margin-right: 1.35rem; margin-left: 1.35rem; }
+    #news article img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+    #emergency { background: var(--forest); color: var(--white); }
+    #emergency h2 { color: var(--white); }
+    #emergency > p { color: #d9e7dc; }
+    #emergency ul { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: .8rem; margin: 1.5rem 0 0; padding: 0; list-style: none; }
+    #emergency li { padding: 1rem; border: 1px solid rgb(255 255 255 / 20%); border-radius: 12px; background: rgb(255 255 255 / 7%); }
+    #emergency li i { margin-right: .4rem; color: #e3d9a9; }
+    #emergency li a { color: var(--white); font-weight: 800; }
+    footer { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 2rem; padding: 3rem max(5vw, calc((100vw - 1200px) / 2)); }
+    footer h2 { margin-top: 0; color: var(--forest); font-size: 1.15rem; }
+    footer p, footer address { color: var(--muted); font-style: normal; }
+    footer > p { grid-column: 1 / -1; margin: 0; padding-top: 1rem; border-top: 1px solid #e8eee7; }
+    footer nav ul { display: grid; gap: .45rem; }
+    @media (max-width: 760px) {
+      body > header { align-items: flex-start; flex-direction: column; gap: .8rem; }
+      nav ul { gap: .55rem 1rem; }
+      main > section { padding-top: 3.5rem; padding-bottom: 3.5rem; }
+      #home { min-height: 540px; }
+      footer { grid-template-columns: 1fr 1fr; }
+      footer > section { grid-column: 1 / -1; }
+    }
+    @media (max-width: 480px) {
+      body > header, footer { padding-right: 1.1rem; padding-left: 1.1rem; }
+      main > section { padding-right: 1.1rem; padding-left: 1.1rem; }
+      #home { min-height: 600px; }
+      #home form button { width: 100%; }
+      footer { grid-template-columns: 1fr; }
+      footer > section, footer > p { grid-column: 1; }
+      th, td { padding: .7rem; }
+    }
+  </style>
+  <!-- Font Awesome provides icons for navigation, services and contact details. -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+  <!-- Site header: brand identity and primary navigation. -->
+  <header>
+    <div>
+      <a href="#home" aria-label="Agency Connect home">
+        <i class="fa-solid fa-mountain-sun" aria-hidden="true"></i>
+        <span>Agency Connect</span>
+      </a>
+      <p>Agency Area Information Portal</p>
+    </div>
+    <nav aria-label="Main navigation">
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#news">Latest News</a></li>
+        <li><a href="#emergency">Emergency Help</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Welcome area introduces the portal and provides village search. -->
+    <section id="home" aria-labelledby="welcome-title">
+      <img src="pathakota-hero.png" alt="" aria-hidden="true">
+      <div>
+        <p lang="te">మన ప్రాంతం • మన అభివృద్ధి</p>
+        <h1 id="welcome-title">Welcome to Agency Connect</h1>
+        <p lang="te">ఏజెన్సీ కనెక్ట్‌కు స్వాగతం</p>
+        <p>Your gateway to useful information, public services and opportunities across agency and tribal areas.</p>
+        <p>Working together for inclusive development, stronger communities and a brighter future in every village.</p>
+        <form action="#village-directory" method="get" role="search">
+          <label for="village-search">Search village information</label>
+          <input id="village-search" name="q" type="search" placeholder="Enter a village name" autocomplete="off">
+          <button type="submit"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> Search</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Service directory: links to key information for residents and visitors. -->
+    <section id="services" aria-labelledby="services-title">
+      <header>
+        <h2 id="services-title">Explore Information</h2>
+        <p lang="te">సమాచారాన్ని అన్వేషించండి</p>
+        <p>Explore information and public services for Pathakota Gram Panchayat, Hukumpeta Mandal.</p>
+        <p lang="te">హుకుంపేట మండలంలోని పాతకోట గ్రామ పంచాయతీ సమాచారం మరియు సేవలను చూడండి.</p>
+      </header>
+      <div>
+        <article id="village-directory">
+          <i class="fa-solid fa-map-location-dot" aria-hidden="true"></i>
+          <h3>Village Directory</h3>
+          <p>Village profiles for the eight villages in Pathakota Panchayat, including:</p>
+          <ul>
+            <li>Village names and population</li>
+            <li>Household counts and village contacts</li>
+            <li>Local facilities, roads and transport</li>
+            <li>Drinking water and electricity</li>
+            <li>Panchayat information</li>
+          </ul>
+          <a href="#pathakota-villages">View Pathakota villages <span aria-hidden="true">→</span></a>
+        </article>
+        <article>
+          <i class="fa-solid fa-file-lines" aria-hidden="true"></i>
+          <h3>Government Schemes</h3>
+          <p>Learn about public programmes, eligibility and applications.</p>
+          <a href="#schemes">View schemes <span aria-hidden="true">→</span></a>
+        </article>
+        <article>
+          <i class="fa-solid fa-book-open-reader" aria-hidden="true"></i>
+          <h3>Education</h3>
+          <p>Find schools, learning resources and student support.</p>
+          <a href="#education">Explore education <span aria-hidden="true">→</span></a>
+        </article>
+        <article>
+          <i class="fa-solid fa-heart-pulse" aria-hidden="true"></i>
+          <h3>Healthcare</h3>
+          <p>Locate health facilities and community care services.</p>
+          <a href="#healthcare">Find healthcare <span aria-hidden="true">→</span></a>
+        </article>
+        <article>
+          <i class="fa-solid fa-seedling" aria-hidden="true"></i>
+          <h3>Agriculture</h3>
+          <p>Access farming information, support and seasonal resources.</p>
+          <a href="#agriculture">Explore agriculture <span aria-hidden="true">→</span></a>
+        </article>
+        <article>
+          <i class="fa-solid fa-briefcase" aria-hidden="true"></i>
+          <h3>Employment</h3>
+          <p>Discover skill development, livelihoods and job resources.</p>
+          <a href="#employment">Find opportunities <span aria-hidden="true">→</span></a>
+        </article>
+        <article>
+          <i class="fa-solid fa-people-group" aria-hidden="true"></i>
+          <h3>Tribal Welfare</h3>
+          <p>Connect with community welfare services and support.</p>
+          <a href="#tribal-welfare">View welfare services <span aria-hidden="true">→</span></a>
+        </article>
+        <article>
+          <i class="fa-solid fa-camera" aria-hidden="true"></i>
+          <h3>Tourism</h3>
+          <p>Discover local culture, heritage and places to visit.</p>
+          <a href="#tourism">Explore tourism <span aria-hidden="true">→</span></a>
+        </article>
+      </div>
+    </section>
+
+    <!-- Pathakota Gram Panchayat village directory from the supplied village records. -->
+    <section id="pathakota-villages" aria-labelledby="pathakota-title">
+      <header>
+        <h2 id="pathakota-title">Pathakota Gram Panchayat Directory</h2>
+        <p lang="te">పాతకోట గ్రామ పంచాయతీ గ్రామాల జాబితా</p>
+        <p>This Gram Panchayat covers 8 villages.</p>
+      </header>
+      <div>
+        <table>
+          <caption>Pathakota Panchayat villages and Census 2011 population availability</caption>
+          <thead>
+            <tr>
+              <th scope="col">No.</th>
+              <th scope="col">Village Name</th>
+              <th scope="col" lang="te">తెలుగు పేరు</th>
+              <th scope="col">Population (2011)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">1</th><td>Pathakota</td><td lang="te">పాతకోట</td><td>Not provided in the supplied record</td></tr>
+            <tr><th scope="row">2</th><td>Chintalaveedhi</td><td lang="te">చింతలవీధి</td><td>Not provided in the supplied record</td></tr>
+            <tr><th scope="row">3</th><td>Rudi @ Degarudi</td><td lang="te">రుడి / డేగరుడి</td><td>Not provided in the supplied record</td></tr>
+            <tr><th scope="row">4</th><td>Boddaputtu</td><td lang="te">బొడ్డపుట్టు</td><td>Not provided in the supplied record</td></tr>
+            <tr><th scope="row">5</th><td>Marripalem</td><td lang="te">మర్రిపాలెం</td><td>Not provided in the supplied record</td></tr>
+            <tr><th scope="row">6</th><td>Mangalamamidi</td><td lang="te">మంగళమామిడి</td><td>Not provided in the supplied record</td></tr>
+            <tr><th scope="row">7</th><td>Dalemputtu</td><td lang="te">దాలెంపుట్టు</td><td>Not provided in the supplied record</td></tr>
+            <tr><th scope="row">8</th><td>Boddapattu (Pathakota)</td><td lang="te">బొడ్డాపట్టు</td><td>Census data not separately listed</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Population figures, where available, are from Census 2011 records. These are historical figures and are not current population estimates.</p>
+      <p>Source: Pathakota Panchayat village records.</p>
+    </section>
+
+    <!-- News area for recent announcements and community updates. -->
+    <section id="news" aria-labelledby="news-title">
+      <header>
+        <h2 id="news-title">Latest News &amp; Updates</h2>
+        <p lang="te">తాజా వార్తలు మరియు నవీకరణలు</p>
+      </header>
+      <article>
+        <img src="https://placehold.co/480x300/e8efe9/315c48?text=Community+Update" alt="Placeholder for a community development update">
+        <p><time datetime="2026-01-15">15 January 2026</time></p>
+        <h3>Community development meeting announced</h3>
+        <p>Details about upcoming local meetings and opportunities to participate will appear here.</p>
+        <a href="#news">Read more</a>
+      </article>
+      <article>
+        <img src="https://placehold.co/480x300/e8efe9/315c48?text=Public+Services" alt="Placeholder for a public services announcement">
+        <p><time datetime="2026-01-10">10 January 2026</time></p>
+        <h3>Public service information refreshed</h3>
+        <p>Check this section for new service information and important notices for residents.</p>
+        <a href="#news">Read more</a>
+      </article>
+      <article>
+        <img src="https://placehold.co/480x300/e8efe9/315c48?text=Local+Stories" alt="Placeholder for a local culture and tourism story">
+        <p><time datetime="2026-01-05">5 January 2026</time></p>
+        <h3>Celebrating local culture and heritage</h3>
+        <p>Stories from agency area communities, traditions and local initiatives.</p>
+        <a href="#news">Read more</a>
+      </article>
+    </section>
+
+    <!-- Emergency contacts make essential help information easy to find. -->
+    <section id="emergency" aria-labelledby="emergency-title">
+      <h2 id="emergency-title">Emergency Contacts</h2>
+      <p lang="te">అత్యవసర సంప్రదింపు నంబర్లు</p>
+      <p>In an emergency, contact the appropriate service. Confirm local numbers before publishing.</p>
+      <ul>
+        <li><i class="fa-solid fa-phone-volume" aria-hidden="true"></i> Emergency response: <a href="tel:112">112</a></li>
+        <li><i class="fa-solid fa-truck-medical" aria-hidden="true"></i> Ambulance: <a href="tel:108">108</a></li>
+        <li><i class="fa-solid fa-fire-extinguisher" aria-hidden="true"></i> Fire service: <a href="tel:101">101</a></li>
+        <li><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Police: <a href="tel:100">100</a></li>
+      </ul>
+    </section>
+  </main>
+
+  <!-- Footer contains portal contact details and useful navigation links. -->
+  <footer id="contact">
+    <section aria-labelledby="about-footer-title">
+      <h2 id="about-footer-title">Agency Connect</h2>
+      <p>Information and services for agency and tribal area communities.</p>
+    </section>
+    <address>
+      <h2>Contact Us</h2>
+      <p><i class="fa-solid fa-location-dot" aria-hidden="true"></i> Agency Area Information Portal<br>District Administration Office<br>Andhra Pradesh, India</p>
+      <p><i class="fa-solid fa-envelope" aria-hidden="true"></i> <a href="mailto:info@agencyconnect.example">info@agencyconnect.example</a></p>
+      <p><i class="fa-solid fa-phone" aria-hidden="true"></i> <a href="tel:+910000000000">+91 00000 00000</a></p>
+    </address>
+    <nav aria-label="Useful links">
+      <h2>Useful Links</h2>
+      <ul>
+        <li><a href="#services">All services</a></li>
+        <li><a href="#village-directory">Village directory</a></li>
+        <li><a href="#news">News and notices</a></li>
+        <li><a href="#emergency">Emergency contacts</a></li>
+      </ul>
+    </nav>
+    <p><small>&copy; 2026 Agency Connect. Information is provided for community awareness.</small></p>
+  </footer>
+  <!-- Load page interactions after the HTML has been parsed. -->
+  <script src="script.js" defer></script>
+</body>
+</html>
